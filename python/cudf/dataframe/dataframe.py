@@ -1322,7 +1322,7 @@ class DataFrame(object):
 
         return df
 
-    def groupby(self, by, sort=False, as_index=False, method="hash"):
+    def groupby(self, by, sort=False, as_index=True, method="hash"):
         """Groupby
 
         Parameters

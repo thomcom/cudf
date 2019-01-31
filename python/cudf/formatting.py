@@ -60,7 +60,7 @@ def format(index, cols, show_headers=True, more_cols=0, more_rows=0,
 
     cell_template = "{:>{}}"
     #   format headers
-    if show_headers:
+    if show_headers and headers[0] != '':
         header = [' ' * widthkey]
         header += [cell_template.format(k, widths[k]) for k in headers[:-1]]
         if lastcol is not None:
@@ -68,6 +68,8 @@ def format(index, cols, show_headers=True, more_cols=0, more_rows=0,
         header += [cell_template.format(k, widths[k]) for k in headers[-1:]]
         out.append(' '.join(header))
     #   format rows
+    if index.name:
+        out.append(cell_template.format(str(index.name), 0))
     for i in range(nrows):
         row = [cell_template.format(str(index[i]), widthkey)]
         for k, vs in cols.items():
