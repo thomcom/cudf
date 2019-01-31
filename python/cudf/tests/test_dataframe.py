@@ -2,6 +2,7 @@
 
 import operator
 import pytest
+import string
 
 import numpy as np
 import pandas as pd
@@ -1472,3 +1473,26 @@ def test_boolmask(pdf, gdf):
     gdf = gdf[boolmask]
     pdf = pdf[boolmask]
     assert_eq(pdf, gdf)
+
+
+@pytest.mark.parametrize('length_variety', [1, 2, 8])
+@pytest.mark.parametrize('ncols', [1, 2, 4])
+@pytest.mark.parametrize(
+    'data_type',
+    ['int8', 'int16', 'int32', 'int64', 'float32', 'float64']
+)
+def test_many_string_outputs(length_variety, ncols, data_type):
+    np.random.seed(0)
+    pdf = pd.DataFrame()
+    for i in range(ncols):
+        header_length = max(1, length_variety+(np.random.randint(
+                            -length_variety, length_variety)))
+        col = ''.join(np.random.choice(list(string.ascii_lowercase))
+                      for _ in range(header_length))
+        pdf[col] = pd.Series(np.random.randint(0, 10**length_variety))\
+            .astype(data_type)
+    gdf = DataFrame.from_pandas(pdf)
+    assert pdf.to_string() == gdf.to_string()
+
+    for col in gdf.columns:
+        assert pdf[col].to_string() == gdf[col].to_string()

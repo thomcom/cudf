@@ -1359,10 +1359,6 @@ class DataFrame(object):
         """
         if (method == "cudf"):
             from cudf.groupby.legacy_groupby import Groupby
-            if as_index:
-                msg = "as_index==True not supported due to the lack of\
-                    multi-index"
-                raise NotImplementedError(msg)
             result = Groupby(self, by=by)
             return result
         else:
