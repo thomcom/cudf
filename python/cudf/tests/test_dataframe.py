@@ -1735,15 +1735,14 @@ def test_gpu_memory_usage_with_boolmask():
     cudaDF = cudf.dataframe.DataFrame.from_pandas(pandasDF)
     boolmask = cudf.Series(np.random.randint(1, 2, len(cudaDF)).astype('bool'))
 
-    memory_used = query_GPU_memory()
     cudaDF = cudaDF[boolmask]
 
+    assert cudaDF.index is cudaDF['col0'].index
+    assert cudaDF.index is cudaDF['col1'].index
     assert cudaDF.index._values.data.mem.device_ctypes_pointer ==\
         cudaDF['col0'].index._values.data.mem.device_ctypes_pointer
     assert cudaDF.index._values.data.mem.device_ctypes_pointer ==\
         cudaDF['col1'].index._values.data.mem.device_ctypes_pointer
-
-    assert memory_used == query_GPU_memory()
 
 
 def test_boolmask(pdf, gdf):
